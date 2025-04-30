@@ -1,0 +1,139 @@
+:root {
+    --primary-dark: #101124;
+    --primary-darker: #0a0b1b;
+    --primary-light: #ffffff;
+    --accent-color: #4f6df5;
+}
+
+html, body {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    background: linear-gradient(135deg, #1a1c44 0%, #2d2459 50%, #261f59 100%);
+    background-attachment: fixed;
+    font-family: 'Inter', sans-serif;
+    color: var(--primary-light);
+    min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Weather animation classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in forwards;
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Glass morphism classes */
+.glass {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.glass-dark {
+    background: rgba(16, 17, 36, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* Weather condition background classes */
+.weather-clear {
+    background: linear-gradient(135deg, #f7b733, #fc4a1a);
+}
+
+.weather-clouds {
+    background: linear-gradient(135deg, #8e9eab, #616161);
+}
+
+.weather-rain {
+    background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+}
+
+.weather-thunderstorm {
+    background: linear-gradient(135deg, #4b6cb7, #182848);
+}
+
+.weather-snow {
+    background: linear-gradient(135deg, #e6dada, #274046);
+}
+
+.weather-drizzle {
+    background: linear-gradient(135deg, #89f7fe, #66a6ff);
+}
+
+.weather-atmosphere {
+    background: linear-gradient(135deg, #bdc3c7, #2c3e50);
+}
+
+.weather-default {
+    background: linear-gradient(135deg, #2d2459, #261f59);
+}
