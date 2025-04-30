@@ -1,16 +1,14 @@
 // components/WeatherCard.vue
 <template>
   <div class="weather-card glass" :class="{ 'fade-in': show }">
-    <div class="location-header">
+    <div class="location-header" v-if="weatherData">
       <div>
-        <h2 class="location-name">{{ weatherData?.name || 'Location' }}</h2>
+        <h2 class="location-name">
+          {{ weatherData?.name || weatherData?.fullName || 'Ort nicht erkannt' }}
+        </h2>
         <div class="location-time">{{ currentTime }}</div>
       </div>
-      <button
-          v-if="weatherData"
-          @click="$emit('save')"
-          class="save-button"
-      >
+      <button @click="$emit('save')" class="save-button">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
           <polyline points="17 21 17 13 7 13 7 21"></polyline>
@@ -20,110 +18,91 @@
       </button>
     </div>
 
-    <div class="weather-content" v-if="weatherData && weatherData.current">
+    <div class="weather-content" v-if="weatherData && (weatherData.current || weatherData.main)">
       <div class="weather-main">
         <div class="temp-container">
           <div class="weather-icon">
             <img
-                v-if="weatherData.current.weather && weatherData.current.weather[0]"
-                :src="getWeatherIconUrl(weatherData.current.weather[0].icon)"
-                :alt="weatherData.current.weather[0].description"
+                :src="getWeatherIconUrl(
+                weatherData.weather?.[0]?.icon ?? weatherData.current?.weather?.[0]?.icon
+              )"
+                :alt="weatherData.weather?.[0]?.description ?? weatherData.current?.weather?.[0]?.description"
             />
           </div>
-          <div class="weather-temp">{{ useImperialUnits ? formatTempF(weatherData.current.temp) : formatTempC(weatherData.current.temp) }}</div>
+          <div class="weather-temp">
+            {{
+              useImperialUnits
+                  ? formatTempF(weatherData.main?.temp ?? weatherData.current?.temp)
+                  : formatTempC(weatherData.main?.temp ?? weatherData.current?.temp)
+            }}
+          </div>
         </div>
         <div class="weather-description">
           <div class="weather-condition">
-            {{ weatherData.current.weather && weatherData.current.weather[0] ? weatherData.current.weather[0].description : 'N/A' }}
+            {{
+              weatherData.weather?.[0]?.description ??
+              weatherData.current?.weather?.[0]?.description ??
+              'N/A'
+            }}
           </div>
-          <div class="weather-feels-like">
-            Gefühlt: {{ useImperialUnits ? formatTempF(weatherData.current.feels_like) : formatTempC(weatherData.current.feels_like) }}
+          <div class="weather-feels-like" v-if="weatherData.current?.feels_like">
+            Gefühlt:
+            {{
+              useImperialUnits
+                  ? formatTempF(weatherData.current.feels_like)
+                  : formatTempC(weatherData.current.feels_like)
+            }}
           </div>
         </div>
       </div>
 
-      <div class="weather-detail">
+      <div class="weather-detail" v-if="weatherData.current">
         <div class="forecast-text">
-          Es wird {{ getWeatherText(weatherData.current.weather[0]?.main) }}.
-          Die Höchstwerte liegen bei {{ useImperialUnits ? formatTempF(weatherData.current.temp + 5) : formatTempC(weatherData.current.temp + 5) }}.
+          Es wird {{ getWeatherText(weatherData.current.weather?.[0]?.main) }}.
+          Die Höchstwerte liegen bei
+          {{
+            useImperialUnits
+                ? formatTempF(weatherData.current.temp + 5)
+                : formatTempC(weatherData.current.temp + 5)
+          }}.
         </div>
       </div>
 
-      <div class="weather-details-grid">
-        <div class="weather-detail-item">
-          <div class="detail-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-          </div>
-          <div class="detail-name">Luftqualität</div>
-          <div class="detail-value">{{ getAirQuality(weatherData.current) }}</div>
-        </div>
-
-        <div class="weather-detail-item">
-          <div class="detail-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path>
-            </svg>
-          </div>
-          <div class="detail-name">Wind</div>
-          <div class="detail-value">{{ Math.round(weatherData.current.wind_speed * 3.6) }} km/h</div>
-        </div>
-
-        <div class="weather-detail-item">
-          <div class="detail-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
-            </svg>
-          </div>
+      <div class="weather-details-grid" v-if="weatherData.current">
+        <div class="weather-detail-item" v-if="weatherData.current.humidity">
           <div class="detail-name">Luftfeuchte</div>
           <div class="detail-value">{{ weatherData.current.humidity }}%</div>
         </div>
-
-        <div class="weather-detail-item">
-          <div class="detail-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-          </div>
+        <div class="weather-detail-item" v-if="weatherData.current.pressure">
           <div class="detail-name">Luftdruck</div>
           <div class="detail-value">{{ weatherData.current.pressure }} mbar</div>
         </div>
-
-        <div class="weather-detail-item">
-          <div class="detail-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-          </div>
+        <div class="weather-detail-item" v-if="weatherData.current.wind_speed">
+          <div class="detail-name">Wind</div>
+          <div class="detail-value">{{ Math.round(weatherData.current.wind_speed * 3.6) }} km/h</div>
+        </div>
+        <div class="weather-detail-item" v-if="weatherData.current.uvi">
           <div class="detail-name">UV Index</div>
           <div class="detail-value">{{ weatherData.current.uvi }}</div>
         </div>
-
-        <div class="weather-detail-item">
-          <div class="detail-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 3v18"></path>
-              <rect x="4" y="8" width="16" height="8" rx="1"></rect>
-            </svg>
-          </div>
+        <div class="weather-detail-item" v-if="weatherData.current.dew_point">
           <div class="detail-name">Taupunkt</div>
-          <div class="detail-value">{{ useImperialUnits ? formatTempF(weatherData.current.dew_point) : formatTempC(weatherData.current.dew_point) }}</div>
+          <div class="detail-value">
+            {{
+              useImperialUnits
+                  ? formatTempF(weatherData.current.dew_point)
+                  : formatTempC(weatherData.current.dew_point)
+            }}
+          </div>
+        </div>
+        <div class="weather-detail-item">
+          <div class="detail-name">Luftqualität</div>
+          <div class="detail-value">{{ getAirQuality(weatherData.current) }}</div>
         </div>
       </div>
     </div>
 
+    <!-- Platzhalter -->
     <div class="weather-placeholder" v-else>
       <svg xmlns="http://www.w3.org/2000/svg" class="placeholder-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
@@ -133,6 +112,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
@@ -156,30 +136,15 @@ onMounted(() => {
 
 const currentTime = computed(() => {
   const now = new Date();
-  const hours = now.getHours().toString().padStart(2, '0');
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  return `${hours}:${minutes}`;
+  return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 });
 
-// Format temperature in Celsius
-const formatTempC = (temp) => {
-  return temp ? `${Math.round(temp)}°C` : 'N/A';
-};
+const formatTempC = (temp) => temp ? `${Math.round(temp)}°C` : 'N/A';
+const formatTempF = (temp) => temp ? `${Math.round((temp * 9/5) + 32)}°F` : 'N/A';
 
-// Format temperature in Fahrenheit
-const formatTempF = (temp) => {
-  return temp ? `${Math.round((temp * 9/5) + 32)}°F` : 'N/A';
-};
+const getWeatherIconUrl = (iconCode) => iconCode ? `https://openweathermap.org/img/wn/${iconCode}@2x.png` : '';
 
-// Get weather icon URL
-const getWeatherIconUrl = (iconCode) => {
-  return iconCode ? `https://openweathermap.org/img/wn/${iconCode}@2x.png` : '';
-};
-
-// Get textual description based on weather type
 const getWeatherText = (weatherType) => {
-  if (!weatherType) return 'klar';
-
   const weatherMapping = {
     'Clear': 'sonnig',
     'Clouds': 'bewölkt',
@@ -196,20 +161,14 @@ const getWeatherText = (weatherType) => {
     'Squall': 'stürmisch',
     'Tornado': 'stürmisch'
   };
-
   return weatherMapping[weatherType] || 'wechselhaft';
 };
 
-// Calculate air quality index (simplified for demo)
-const getAirQuality = (currentWeather) => {
-  if (!currentWeather) return 'N/A';
-
-  // This is a simplified calculation - in real app would use API data
-  const humidityFactor = currentWeather.humidity / 100;
-  const windFactor = 1 - (Math.min(currentWeather.wind_speed * 3.6, 50) / 50);
-
-  const qualityValue = Math.round(30 + Math.random() * 20); // For demo purposes
-
+const getAirQuality = (current) => {
+  if (!current) return 'N/A';
+  const humidityFactor = current.humidity / 100;
+  const windFactor = 1 - (Math.min(current.wind_speed * 3.6, 50) / 50);
+  const qualityValue = Math.round(30 + Math.random() * 20);
   if (qualityValue < 30) return 'Sehr gut';
   if (qualityValue < 50) return 'Gut';
   if (qualityValue < 70) return 'Mäßig';
