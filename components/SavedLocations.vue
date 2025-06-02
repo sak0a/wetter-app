@@ -1,6 +1,5 @@
 // components/SavedLocations.vue
 <template>
-  <div class="saved-locations glass-dark" v-if="history.length > 0">
     <div class="saved-locations-grid">
       <div
           v-for="item in history"
@@ -51,7 +50,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -81,12 +79,12 @@ const toggleDropdown = (id) => {
   }
 };
 
-// Click outside to close dropdown
+// Click outside to close the dropdown
 const closeDropdown = () => {
   activeDropdown.value = null;
 };
 
-// Add global click handler for closing dropdowns
+// Add a global click handler for closing dropdowns
 if (typeof window !== 'undefined') {
   window.addEventListener('click', (e) => {
     if (!e.target.closest('.menu-button') && !e.target.closest('.dropdown-menu')) {
@@ -119,7 +117,7 @@ const getWeatherIconUrl = (iconCode) => {
 
 .saved-locations-grid {
   display: flex;
-  overflow-x: auto;
+  overflow-y: auto;
   gap: 0.75rem;
   padding: 0.25rem 0;
 }

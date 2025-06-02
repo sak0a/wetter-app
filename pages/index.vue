@@ -1,48 +1,53 @@
 // pages/index.vue
 <template>
-  <div class="weather-app-container">
-    <div class="weather-app-content">
-
-      <div class="search-section">
-        <SearchBar
-            :loading="isLoading"
-            @search="searchLocation"
-        />
-
-        <div class="current-location">
-          <div v-if="weatherData" class="location-pill">
-            <span class="location-name">{{ weatherData.name }}</span>
-            <span class="location-temp">{{ useImperialUnits ? formatTempF(weatherData.current?.temp) : formatTempC(weatherData.current?.temp) }}</span>
-          </div>
-          <UnitsToggle
-              :useImperialUnits="useImperialUnits"
-              @update:units="toggleUnits"
+  <div class="Main-Container">
+    <div class="search-and-saved">
+        <div class="search-bar">
+          <SearchBar
+              :loading="isLoading"
+              @search="searchLocation"
           />
         </div>
-      </div>
+        <SavedLocations
+            class = "saved-location-container"
+            :history="searchHistory"
+            :useImperialUnits="useImperialUnits"
+            @select="loadHistoryItem"
+            @remove="removeHistoryItem"
+        />
+    </div>
+    <div class="weather-app-container">
+      <div class="weather-app-content">
 
-      <SavedLocations
-          :history="searchHistory"
-          :useImperialUnits="useImperialUnits"
-          @select="loadHistoryItem"
-          @remove="removeHistoryItem"
-      />
-
-      <div class="main-content">
-        <div class="weather-grid">
-          <div class="weather-card-container">
-            <WeatherCard
-                :weatherData="weatherData"
+        <div class="search-section">
+          <div class="current-location">
+            <div v-if="weatherData" class="location-pill">
+              <span class="location-name">{{ weatherData.name }}</span>
+              <span class="location-temp">{{ useImperialUnits ? formatTempF(weatherData.current?.temp) : formatTempC(weatherData.current?.temp) }}</span>
+            </div>
+            <UnitsToggle
                 :useImperialUnits="useImperialUnits"
-                @save="saveCurrentWeather"
+                @update:units="toggleUnits"
             />
           </div>
+        </div>
 
-          <div class="map-container">
-            <WeatherMap
-                :currentCoords="currentCoords"
-                @location-selected="handleMapLocationSelected"
-            />
+        <div class="main-content">
+          <div class="weather-grid">
+            <div class="weather-card-container">
+              <WeatherCard
+                  :weatherData="weatherData"
+                  :useImperialUnits="useImperialUnits"
+                  @save="saveCurrentWeather"
+              />
+            </div>
+
+            <div class="map-container">
+              <WeatherMap
+                  :currentCoords="currentCoords"
+                  @location-selected="handleMapLocationSelected"
+              />
+            </div>
           </div>
         </div>
       </div>
