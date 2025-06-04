@@ -2,7 +2,7 @@ import { ref, onMounted } from 'vue';
 import Cookies from 'js-cookie';
 import SearchBar from "~/components/SearchBar.vue";
 import UnitsToggle from "~/components/UnitsToggle.vue";
-import SavedLocations from "~/components/SavedLocations.vue";
+import SavedLocations from "~/components/SavedLocations/SavedLocations.vue";
 import WeatherCard from "~/components/WeatherCard.vue";
 import WeatherMap from "~/components/WeatherMap.vue";
 
