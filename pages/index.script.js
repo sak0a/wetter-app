@@ -1,10 +1,10 @@
 import { ref, onMounted } from 'vue';
 import Cookies from 'js-cookie';
-import SearchBar from "~/components/SearchBar.vue";
-import UnitsToggle from "~/components/UnitsToggle.vue";
-import SavedLocations from "~/components/SavedLocations.vue";
-import WeatherCard from "~/components/WeatherCard.vue";
-import WeatherMap from "~/components/WeatherMap.vue";
+import SearchBar from "~/components/SearchBar/SearchBar.vue";
+import UnitsToggle from "~/components/UnitsToggle/UnitsToggle.vue";
+import SavedLocations from "~/components/SavedLocations/SavedLocations.vue";
+import WeatherCard from "~/components/WeatherCard/WeatherCard.vue";
+import WeatherMap from "~/components/WeatherMap/WeatherMap.vue";
 
 export default {
     components: {WeatherMap, WeatherCard, SavedLocations, UnitsToggle, SearchBar},
@@ -114,7 +114,7 @@ export default {
             try {
                 const oneCallRes  = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&exclude=hourly,daily&appid=${apiKey.value}&units=metric`);
                 const oneCallData  = await oneCallRes.json();
-
+console.log(oneCallData);
                 const cityRes = await fetch(
                     `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${apiKey.value}&units=metric`
                 );
