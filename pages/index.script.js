@@ -114,7 +114,7 @@ export default {
             try {
                 const oneCallRes  = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&exclude=hourly,daily&appid=${apiKey.value}&units=metric`);
                 const oneCallData  = await oneCallRes.json();
-
+console.log(oneCallData);
                 const cityRes = await fetch(
                     `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${apiKey.value}&units=metric`
                 );
