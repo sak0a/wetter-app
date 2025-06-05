@@ -1,4 +1,3 @@
-// pages/index.vue
 <template>
   <div class="Main-Container">
     <div class="search-and-saved">

@@ -1,9 +1,13 @@
 <template>
   <div>
-    <NavBar />
     <NuxtPage />
   </div>
 </template>
+
+<script setup>
+import NavBar from '@/components/navBar/NavBar.vue';
+</script>
+
 <style>
 :root {
   --primary-dark: #1a1b30;
