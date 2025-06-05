@@ -50,5 +50,5 @@
   </div>
 </template>
 
-<script src="./HomePageScript.js"></script>
-<style src="./HomePageCSS.css" scoped></style>
+<script src="./index.script.js"></script>
+<style src="./index.css" scoped></style>
