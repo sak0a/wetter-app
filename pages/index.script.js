@@ -12,7 +12,7 @@ export default {
         const isLoading = ref(false);
         const weatherData = ref(null);
         const searchHistory = ref([]);
-        const currentCoords = ref({ lat: 50.110644, lng: 8.68 }); // Default to London
+        const currentCoords = ref({ lat: 50.110644, lng: 8.68 }); // Default to Frankfurt
         const apiKey = ref('2c4e17f310350ace6cb874f4457c2573');
         const useImperialUnits = ref(false);
 
