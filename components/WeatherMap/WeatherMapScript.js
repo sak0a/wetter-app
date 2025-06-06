@@ -5,7 +5,7 @@ export default {
     props: {
         currentCoords: {
             type: Object,
-            default: () => ({ lat: 51.505, lng: -0.09 }) // Default to London
+            default: () => ({ lat: 50.110644, lng: 8.68 }) 
         }
     },
     emits: ['location-selected'],
