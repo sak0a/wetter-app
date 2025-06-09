@@ -1,9 +1,9 @@
 // components/SavedLocationsScript.vue
 <template>
-  <div class="saved-locations glass-dark" v-if="history.length > 0">
+  <div class="saved-locations glass-dark" v-if="history.length >= 0">
     <div class="saved-locations-grid">
       <div
-          v-for="item in history"
+          v-for="item in history.slice(0, 3)"
           :key="item.id"
           class="saved-location-item"
           @click="$emit('select', item)"
@@ -51,8 +51,15 @@
         </div>
       </div>
     </div>
+
+    <div class="SavedLocation-placeholder"  v-if="history.length === 0">
+      <p>Speichern Sie einen Ort</p>
+    </div>
+
   </div>
 </template>
 
 <script src="./SavedLocationsScript.js"></script>
 <style src="./SavedLocationsCSS.css" scoped></style>
+<script setup lang="ts">
+</script>

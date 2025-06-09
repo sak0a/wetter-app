@@ -12,7 +12,7 @@ export default {
         const isLoading = ref(false);
         const weatherData = ref(null);
         const searchHistory = ref([]);
-        const currentCoords = ref({ lat: 50.110644, lng: 8.68 }); // Default to Frankfurt
+        const currentCoords = ref({ lat: 50.110644, lng: 8.68 });
         const apiKey = ref('2c4e17f310350ace6cb874f4457c2573');
         const useImperialUnits = ref(false);
 
@@ -114,7 +114,7 @@ export default {
             try {
                 const oneCallRes  = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&exclude=hourly,daily&appid=${apiKey.value}&units=metric`);
                 const oneCallData  = await oneCallRes.json();
-console.log(oneCallData);
+                    console.log(oneCallData);
                 const cityRes = await fetch(
                     `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${apiKey.value}&units=metric`
                 );
@@ -157,8 +157,8 @@ console.log(oneCallData);
                 current: weatherData.value.current
             });
 
-            if (searchHistory.value.length > 5) {
-                searchHistory.value = searchHistory.value.slice(0, 5);
+            if (searchHistory.value.length > 3) {
+                searchHistory.value = searchHistory.value.slice(0, 3);
             }
 
             saveSearchHistory();

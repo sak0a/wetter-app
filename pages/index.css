@@ -25,6 +25,10 @@
     margin-top: 0.5rem;
 }
 
+.SavedLocations{
+    padding: 1rem;
+}
+
 .location-pill {
     display: flex;
     align-items: center;

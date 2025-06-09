@@ -21,12 +21,15 @@
         </div>
       </div>
 
-      <SavedLocations
-          :history="searchHistory"
-          :useImperialUnits="useImperialUnits"
-          @select="loadHistoryItem"
-          @remove="removeHistoryItem"
-      />
+      <div class="SavedLocations">
+        <SavedLocations
+            :history="searchHistory"
+            :useImperialUnits="useImperialUnits"
+            @select="loadHistoryItem"
+            @remove="removeHistoryItem"
+        />
+      </div>
+
 
       <div class="main-content">
         <div class="weather-grid">
