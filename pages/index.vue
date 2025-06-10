@@ -26,6 +26,7 @@
           :useImperialUnits="useImperialUnits"
           @select="loadHistoryItem"
           @remove="removeHistoryItem"
+          @refresh-location="requestLocationPermission"
       />
 
       <div class="main-content">
@@ -41,6 +42,8 @@
           <div class="map-container">
             <WeatherMap
                 :currentCoords="currentCoords"
+                :weatherData="weatherData"
+                :useImperialUnits="useImperialUnits"
                 @location-selected="handleMapLocationSelected"
             />
           </div>

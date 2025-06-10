@@ -12,7 +12,7 @@ export default {
             default: false
         }
     },
-    emits: ['select', 'remove'],
+    emits: ['select', 'remove', 'refresh-location'],
 
     setup() {
         const activeDropdown = ref(null);
