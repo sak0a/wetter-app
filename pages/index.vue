@@ -48,6 +48,14 @@
             />
           </div>
         </div>
+
+        <!-- Hourly Forecast Component -->
+        <div class="hourly-forecast-container">
+          <HourlyForecast
+              :weatherData="weatherData"
+              :useImperialUnits="useImperialUnits"
+          />
+        </div>
       </div>
     </div>
   </div>

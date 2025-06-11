@@ -99,6 +99,13 @@
     opacity: 1;
 }
 
+/* Hourly Forecast Integration */
+.hourly-forecast-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 @media (max-width: 768px) {
     .weather-grid {
         grid-template-columns: 1fr;
@@ -106,6 +113,10 @@
 
     .map-container {
         order: -1;
+    }
+
+    .hourly-forecast-container {
+        padding: 0 0.5rem;
     }
 }
 

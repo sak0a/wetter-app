@@ -5,9 +5,10 @@ import UnitsToggle from "~/components/UnitsToggle/UnitsToggle.vue";
 import SavedLocations from "~/components/SavedLocations/SavedLocations.vue";
 import WeatherCard from "~/components/WeatherCard/WeatherCard.vue";
 import WeatherMap from "~/components/WeatherMap/WeatherMap.vue";
+import HourlyForecast from "~/components/HourlyForecast/HourlyForecast.vue";
 
 export default {
-    components: {WeatherMap, WeatherCard, SavedLocations, UnitsToggle, SearchBar},
+    components: {WeatherMap, WeatherCard, SavedLocations, UnitsToggle, SearchBar, HourlyForecast},
     setup() {
         const isLoading = ref(false);
         const weatherData = ref(null);
@@ -188,11 +189,11 @@ export default {
 
         const getWeatherData = async (lat, lng, locationInfo) => {
             try {
-                // Open-Meteo API - completely free with comprehensive weather data
-                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,dew_point_2m,visibility&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`;
+                // Open-Meteo API - comprehensive weather data with extended forecast
+                const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,pressure_msl,surface_pressure,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index,is_day&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,precipitation_probability_max&timezone=auto&forecast_days=8&past_days=1`;
 
-                // Air quality API from Open-Meteo
-                const airQualityUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lng}&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&timezone=auto`;
+                // Air quality API from Open-Meteo with extended forecast
+                const airQualityUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lng}&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone&hourly=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,us_aqi&timezone=auto&forecast_days=8&past_days=1`;
 
                 const [weatherRes, airQualityRes] = await Promise.all([
                     fetch(weatherUrl),
@@ -244,9 +245,43 @@ export default {
                                 o3: airQualityData.current?.ozone || null
                             }
                         },
+                        hourly: {
+                            time: hourly.time,
+                            temperature_2m: hourly.temperature_2m,
+                            relative_humidity_2m: hourly.relative_humidity_2m,
+                            dew_point_2m: hourly.dew_point_2m,
+                            apparent_temperature: hourly.apparent_temperature,
+                            precipitation_probability: hourly.precipitation_probability,
+                            precipitation: hourly.precipitation,
+                            weather_code: hourly.weather_code,
+                            pressure_msl: hourly.pressure_msl,
+                            surface_pressure: hourly.surface_pressure,
+                            cloud_cover: hourly.cloud_cover,
+                            visibility: hourly.visibility,
+                            wind_speed_10m: hourly.wind_speed_10m,
+                            wind_direction_10m: hourly.wind_direction_10m,
+                            wind_gusts_10m: hourly.wind_gusts_10m,
+                            uv_index: hourly.uv_index,
+                            is_day: hourly.is_day,
+                            // Air quality hourly data
+                            air_quality: {
+                                pm10: airQualityData.hourly?.pm10 || [],
+                                pm2_5: airQualityData.hourly?.pm2_5 || [],
+                                carbon_monoxide: airQualityData.hourly?.carbon_monoxide || [],
+                                nitrogen_dioxide: airQualityData.hourly?.nitrogen_dioxide || [],
+                                sulphur_dioxide: airQualityData.hourly?.sulphur_dioxide || [],
+                                ozone: airQualityData.hourly?.ozone || [],
+                                us_aqi: airQualityData.hourly?.us_aqi || []
+                            }
+                        },
                         daily: {
-                            temp_max: daily.temperature_2m_max[0],
-                            temp_min: daily.temperature_2m_min[0]
+                            time: daily.time,
+                            temperature_2m_max: daily.temperature_2m_max,
+                            temperature_2m_min: daily.temperature_2m_min,
+                            sunrise: daily.sunrise,
+                            sunset: daily.sunset,
+                            precipitation_sum: daily.precipitation_sum,
+                            precipitation_probability_max: daily.precipitation_probability_max
                         }
                     };
 

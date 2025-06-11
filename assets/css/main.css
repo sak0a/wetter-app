@@ -11,7 +11,7 @@ html, body {
 }
 
 body {
-    background: linear-gradient(135deg, #1a1c44 0%, #2d2459 50%, #261f59 100%);
+    background: linear-gradient(135deg, #0f1023 0%, #201b3d 50%, #1a163d 100%);
     background-attachment: fixed;
     font-family: 'Inter', sans-serif;
     color: var(--primary-light);
