@@ -155,7 +155,7 @@
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.6);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
 .info-icon {
@@ -226,6 +226,12 @@
         gap: 1rem;
     }
 }
+
+.weather-action-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 
 @media (max-width: 480px) {
     .weather-card {

@@ -6,8 +6,8 @@
         <h1 class="weather-title">Aktuelles Wetter in {{ weatherData?.name || 'Unbekannter Ort' }}</h1>
         <div class="weather-time">{{ currentTime }}</div>
       </div>
-      <button @click="$emit('save')" class="weather-action-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button @click="handleSave" class="weather-action-button" :disabled="!locationStore.canAddLocation">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M8 12h8"></path>
           <path d="M12 8v8"></path>
         </svg>
@@ -142,6 +142,8 @@
 
 
 <script setup>
+
+import { useLocationStore } from '@/stores/LocationStore'
 import { ref, computed, onMounted } from 'vue';
 
 const props = defineProps({
@@ -152,8 +154,20 @@ const props = defineProps({
   }
 });
 
+const locationStore = useLocationStore()
+
 const emit = defineEmits(['save']);
 const show = ref(false);
+
+const handleSave = () => {
+  if (!locationStore.canAddLocation) {
+    alert('Bitte löschen Sie zuerst einen gespeicherten Ort, bevor Sie einen neuen hinzufügen.');
+    return;
+  }
+
+  const success = locationStore.addLocation(props.weatherData);
+}
+
 
 onMounted(() => {
   setTimeout(() => {

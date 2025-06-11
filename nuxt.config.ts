@@ -38,5 +38,10 @@ export default defineNuxtConfig({
       ]
     }
   },
-  modules: ['@nuxtjs/tailwindcss', 'nuxt-mdi']
+  modules: [
+      '@nuxtjs/tailwindcss',
+      'nuxt-mdi',
+      '@pinia/nuxt',
+      '@pinia-plugin-persistedstate/nuxt',
+  ]
 })

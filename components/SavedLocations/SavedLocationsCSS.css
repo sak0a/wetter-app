@@ -1,33 +1,25 @@
 .saved-locations {
-    padding: 1rem;
-    margin-top: 1rem;
-    width: 100%;
     display: flex;
-    justify-content: center;
-
+    padding: 1rem 1rem;
 }
 
 .saved-locations-grid {
     display: flex;
-    justify-content: center;
-    gap: 4rem;
-    padding: 0.25rem 0;
-    width: 100%;
-    max-width: 1200px;
-    position: relative;
+    flex-wrap: nowrap;
+    gap: 2rem;
     margin: 0 auto;
+    padding: 0.25rem;
+    width: fit-content;
+    min-width: 1250px;
+    max-width: 1600px;
+    min-height: 60px;
 }
 
-.saved-locations-grid:has(.saved-location-item:only-child) {
-    justify-content: flex-start;
-    padding-left: 1rem;
-}
 
 .saved-location-item {
     width: 320px;
-    flex-shrink: 0;
+    flex: 0 0 320px;
     display: flex;
-    grid-template-columns: 1fr auto auto;
     justify-content: space-between;
     padding: 0.5rem 0.875rem;
     background: rgba(255, 255, 255, 0.08);
@@ -37,8 +29,6 @@
     transition: all 0.2s ease;
     position: relative;
     z-index: 1;
-
-
 }
 
 .saved-location-item:hover {
@@ -80,7 +70,6 @@
     margin: 0.5rem 1rem;
     white-space: nowrap;
     flex-shrink: 0;
-
 }
 
 .location-actions {
@@ -105,13 +94,11 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     height: 50px;
     color: rgba(255, 255, 255, 0.7);
-    margin-right: 10rem;
     margin-top: 1rem;
-
 }
 
 .menu-button:hover {
@@ -164,8 +151,12 @@
     color: rgba(255, 0, 0, 0.8);
 }
 
+
 @media (max-width: 768px) {
-    .saved-location-item {
-        min-width: 150px;
+
+
+    .saved-locations-grid {
+        justify-content: flex-start;
+        padding: 0 1rem;
     }
 }

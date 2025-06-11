@@ -1,6 +1,11 @@
+//SavedLocationsScript.js
+
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useLocationStore } from '@/stores/LocationStore'
+
 
 export default {
+
     name: 'SavedLocations',
     props: {
         history: {
@@ -16,6 +21,8 @@ export default {
 
     setup() {
         const activeDropdown = ref(null);
+        const locationStore = useLocationStore()
+
 
         // Toggle dropdown menu
         const toggleDropdown = (id) => {
@@ -25,6 +32,11 @@ export default {
                 activeDropdown.value = id;
             }
         };
+
+        const handleRemove = (locationId) => {
+            locationStore.removeLocation(locationId)
+        }
+
 
         // Close dropdown
         const closeDropdown = () => {
@@ -73,7 +85,9 @@ export default {
             closeDropdown,
             formatTempC,
             formatTempF,
-            getWeatherIconUrl
+            getWeatherIconUrl,
+            handleRemove,
+            locationStore
         };
     }
 };

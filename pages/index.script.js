@@ -5,6 +5,8 @@ import UnitsToggle from "~/components/UnitsToggle/UnitsToggle.vue";
 import SavedLocations from "~/components/SavedLocations/SavedLocations.vue";
 import WeatherCard from "~/components/WeatherCard/WeatherCard.vue";
 import WeatherMap from "~/components/WeatherMap/WeatherMap.vue";
+import { useLocationStore } from '@/stores/LocationStore'
+
 
 export default {
     components: {WeatherMap, WeatherCard, SavedLocations, UnitsToggle, SearchBar},
@@ -14,6 +16,7 @@ export default {
         const searchHistory = ref([]);
         const currentCoords = ref({ lat: 50.110644, lng: 8.68 }); // Default to Frankfurt
         const useImperialUnits = ref(false);
+        const locationStore = useLocationStore()
 
         onMounted(() => {
             loadSearchHistory();
@@ -107,8 +110,7 @@ export default {
                     const location = data[0];
                     const address = location.address;
 
-                    // Use improved location name resolution for search results too
-                    // Priority: village > municipality > city > town > suburb > neighbourhood > hamlet
+
                     const city = address.village ||
                                address.municipality ||
                                address.city ||
@@ -123,7 +125,7 @@ export default {
                         lng: parseFloat(location.lon)
                     };
 
-                    // Create a more descriptive full name
+
                     const region = address.state || address.county || address.country;
                     const fullName = region ? `${city}, ${region}` : city;
 
@@ -329,7 +331,14 @@ export default {
                 const cityInfo = await getCityName(coords.lat, coords.lng);
                 if (cityInfo) {
                     await getWeatherData(coords.lat, coords.lng, cityInfo);
-                    saveCurrentLocationToHistory(coords, cityInfo);
+
+                    if (weatherData.value) {
+                        console.log("Speichere aktuellen Standort im LocationStore");
+                        locationStore.updateCurrentLocation({
+                            ...weatherData.value,
+                            isCurrentLocation: true
+                        });
+                    }
                 }
             } catch (error) {
                 console.log('Location permission denied or error:', error);
@@ -370,13 +379,54 @@ export default {
                     };
 
                     await getWeatherData(coords.lat, coords.lng, cityInfo);
-                    saveCurrentLocationToHistory(coords, cityInfo, true); // true indicates IP-based
+
+                    if (weatherData.value) {
+                        console.log("Speichere IP-basierten Standort im LocationStore");
+                        locationStore.updateCurrentLocation({
+                            ...weatherData.value,
+                            isCurrentLocation: true,
+                            isIPBased: true
+                        });
+                    }
                 }
             } catch (error) {
                 console.error('Failed to get location from IP:', error);
                 // Keep default Frankfurt location if all else fails
             }
         };
+
+        const handleRefreshLocation = async () => {
+            if (navigator.geolocation) {
+                try {
+                    const position = await getCurrentLocation();
+                    const coords = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    currentCoords.value = coords;
+                    const cityInfo = await getCityName(coords.lat, coords.lng);
+
+                    if (cityInfo) {
+                        await getWeatherData(coords.lat, coords.lng, cityInfo);
+
+                        if (weatherData.value) {
+                            console.log("Aktualisiere Standort im LocationStore");
+                            locationStore.updateCurrentLocation({
+                                ...weatherData.value,
+                                isCurrentLocation: true
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.log('Location permission denied or error:', error);
+                    await getLocationFromIP();
+                }
+            } else {
+                await getLocationFromIP();
+            }
+        };
+
 
         const saveCurrentLocationToHistory = (coords, cityInfo, isIPBased = false) => {
             const locationName = isIPBased ? 'Current Location (Approximate)' : 'Current Location';
@@ -400,12 +450,19 @@ export default {
                 // Add current location as first item
                 searchHistory.value.unshift(currentLocationEntry);
 
-                // Keep only 6 items total (including current location)
+
                 if (searchHistory.value.length > 6) {
                     searchHistory.value = searchHistory.value.slice(0, 6);
                 }
 
                 saveSearchHistory();
+
+                locationStore.updateCurrentLocation({
+                    ...weatherData.value,
+                    isCurrentLocation: true,
+                    isIPBased: isIPBased
+                });
+
             }
         };
 
@@ -496,7 +553,8 @@ export default {
             removeHistoryItem,
             requestLocationPermission,
             saveLastViewedWeather,
-            loadLastViewedWeather
+            loadLastViewedWeather,
+            handleRefreshLocation
         };
     }
 };

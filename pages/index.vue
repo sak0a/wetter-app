@@ -22,11 +22,9 @@
       </div>
 
       <SavedLocations
-          :history="searchHistory"
           :useImperialUnits="useImperialUnits"
           @select="loadHistoryItem"
-          @remove="removeHistoryItem"
-          @refresh-location="requestLocationPermission"
+          @refresh-location="handleRefreshLocation"
       />
 
       <div class="main-content">
@@ -35,7 +33,6 @@
             <WeatherCard
                 :weatherData="weatherData"
                 :useImperialUnits="useImperialUnits"
-                @save="saveCurrentWeather"
             />
           </div>
 

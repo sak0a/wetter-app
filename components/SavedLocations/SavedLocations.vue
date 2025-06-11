@@ -1,15 +1,18 @@
 // components/SavedLocationsScript.vue
 <template>
-  <div class="saved-locations glass-dark" v-if="history.length >= 0">
+  <div class="saved-locations glass-dark"  :class="{
+  }" v-if="locationStore.savedLocations.length >= 0
+">
     <div class="saved-locations-grid">
       <div
-          v-for="item in history.slice(0, 3)"
+          v-for="item in locationStore.savedLocations"
           :key="item.id"
           class="saved-location-item"
           :class="{ 'current-location': item.isCurrentLocation }"
           @click="$emit('select', item)"
+
       >
-        <!-- Location Info -->
+
         <div class="location-info">
           <div class="location-icon">
             <!-- Special icon for current location -->
@@ -60,7 +63,7 @@
               Standort aktualisieren
             </button>
             <!-- Remove option for regular locations -->
-            <button v-else class="dropdown-item" @click.stop="$emit('remove', item.id, $event)">
+            <button v-else class="dropdown-item" @click.stop="handleRemove(item.id)">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 6h18"></path>
                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
@@ -75,7 +78,7 @@
       </div>
     </div>
 
-    <div class="SavedLocation-placeholder"  v-if="history.length === 0">
+    <div class="SavedLocation-placeholder"  v-if="locationStore.savedLocations.length === 0">
       <p>Speichern Sie einen Ort</p>
     </div>
 
@@ -84,5 +87,3 @@
 
 <script src="./SavedLocationsScript.js"></script>
 <style src="./SavedLocationsCSS.css" scoped></style>
-<script setup lang="ts">
-</script>
