@@ -13,6 +13,7 @@ export default defineNuxtConfig({
   },
   build: {
     transpile: [
+      'chart.js'
     ]
   },
   ssr: true,
