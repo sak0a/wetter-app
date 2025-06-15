@@ -62,7 +62,7 @@ export default {
             { id: 'airquality', label: 'Luftqualität' }
         ];
 
-        // Computed properties for daily cards
+
         const dailyCards = computed(() => {
             if (!props.weatherData?.daily?.time) return [];
 
@@ -333,7 +333,6 @@ export default {
         const createOverviewChart = () => {
             if (!overviewChart.value || !selectedDayHourlyData.value) return;
 
-            // Destroy existing chart
             if (overviewChartInstance) {
                 overviewChartInstance.destroy();
                 overviewChartInstance = null;

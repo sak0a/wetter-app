@@ -27,10 +27,9 @@ export default {
                     useImperialUnits.value = savedUnits === 'imperial';
                 }
 
-                // Load last viewed weather location first
                 loadLastViewedWeather();
 
-                // Check for first visit and request location (only if no last viewed weather)
+
                 if (!weatherData.value) {
                     checkFirstVisitAndRequestLocation();
                 }
@@ -483,10 +482,9 @@ export default {
                     isIPBased: isIPBased
                 };
 
-                // Add current location as first item
                 searchHistory.value.unshift(currentLocationEntry);
 
-                // Keep only 6 items total (including current location)
+
                 if (searchHistory.value.length > 6) {
                     searchHistory.value = searchHistory.value.slice(0, 6);
                 }
@@ -502,7 +500,7 @@ export default {
             }
         };
 
-        // Helper functions for Open-Meteo weather codes
+
         const getWeatherConditionFromCode = (code) => {
             const weatherCodes = {
                 0: 'Clear',

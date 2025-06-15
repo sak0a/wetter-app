@@ -10,7 +10,6 @@
           class="saved-location-item"
           :class="{ 'current-location': item.isCurrentLocation }"
           @click="$emit('select', item)"
-
       >
 
         <div class="location-info">
@@ -22,7 +21,7 @@
                 <circle cx="12" cy="10" r="3"></circle>
               </svg>
             </div>
-            <!-- Weather icon for other locations -->
+
             <img
                 v-else-if="item.current?.weather && item.current.weather[0]"
                 :src="getWeatherIconUrl(item.current.weather[0].icon)"
@@ -78,9 +77,6 @@
       </div>
     </div>
 
-    <div class="SavedLocation-placeholder"  v-if="locationStore.savedLocations.length === 0">
-      <p>Speichern Sie einen Ort</p>
-    </div>
 
   </div>
 </template>
