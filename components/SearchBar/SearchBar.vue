@@ -51,4 +51,4 @@ const clearSearch = () => {
 };
 </script>
 
-<style src="./SearchBarCSS.css" scoped></style>
+<style src="./SearchBar.css" scoped></style>

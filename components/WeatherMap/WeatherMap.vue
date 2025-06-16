@@ -106,6 +106,5 @@
   </div>
 </template>
 
-<script src="./WeatherMapScript.js"> </script>
-<style src="./WeatherMapCSS.css"></style>
-<style src="./WeatherMapCSS.css" scoped></style>
+<script src="./WeatherMap.js"> </script>
+<style src="./WeatherMap.css" scoped></style>

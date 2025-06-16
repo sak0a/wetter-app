@@ -281,4 +281,4 @@ const getVisibility = (current) => {
 };
 </script>
 
-<style src="./WeatherCardCSS.css" scoped></style>
+<style src="./WeatherCard.css" scoped></style>

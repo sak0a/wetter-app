@@ -124,4 +124,4 @@ const getWeatherConditionClass = (weatherCode) => {
 };
 </script>
 
-<style src="./WeatherHistoryCSS.css" scoped></style>
+<style src="./WeatherHistory.css" scoped></style>

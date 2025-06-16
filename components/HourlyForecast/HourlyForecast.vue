@@ -80,87 +80,19 @@
         
         <!-- Weather Details Section -->
         <div class="weather-details">
-          <h3 class="details-title">Wetterdetails</h3>
+          <h3 class="details-title">{{ getActiveTabTitle() }}</h3>
           <div class="details-grid">
-            <div class="detail-card">
+            <div
+              v-for="container in getActiveTabContainers()"
+              :key="container.key"
+              class="detail-card"
+            >
               <div class="detail-header">
-                <span class="detail-icon">🌡️</span>
-                <span class="detail-title-text">Gefühlte Temperatur</span>
+                <span class="detail-icon">{{ container.icon }}</span>
+                <span class="detail-title-text">{{ container.title }}</span>
               </div>
-              <div class="detail-value-large">{{ getCurrentFeelsLike() }}</div>
-              <div class="detail-description">Wie sich die Temperatur anfühlt</div>
-            </div>
-
-            <div class="detail-card">
-              <div class="detail-header">
-                <span class="detail-icon">💧</span>
-                <span class="detail-title-text">Luftfeuchtigkeit</span>
-              </div>
-              <div class="detail-value-large">{{ getCurrentHumidity() }}</div>
-              <div class="detail-description">Relative Luftfeuchtigkeit</div>
-            </div>
-
-            <div class="detail-card">
-              <div class="detail-header">
-                <span class="detail-icon">🌫️</span>
-                <span class="detail-title-text">Taupunkt</span>
-              </div>
-              <div class="detail-value-large">{{ getCurrentDewPoint() }}</div>
-              <div class="detail-description">Kondensationstemperatur</div>
-            </div>
-
-            <div class="detail-card">
-              <div class="detail-header">
-                <span class="detail-icon">📊</span>
-                <span class="detail-title-text">Luftdruck</span>
-              </div>
-              <div class="detail-value-large">{{ getCurrentPressure() }}</div>
-              <div class="detail-description">Atmosphärischer Druck</div>
-            </div>
-
-            <div class="detail-card">
-              <div class="detail-header">
-                <span class="detail-icon">👁️</span>
-                <span class="detail-title-text">Sichtweite</span>
-              </div>
-              <div class="detail-value-large">{{ getCurrentVisibility() }}</div>
-              <div class="detail-description">Horizontale Sichtweite</div>
-            </div>
-
-            <div class="detail-card">
-              <div class="detail-header">
-                <span class="detail-icon">☀️</span>
-                <span class="detail-title-text">UV-Index</span>
-              </div>
-              <div class="detail-value-large">{{ getCurrentUVIndex() }}</div>
-              <div class="detail-description">UV-Strahlungsintensität</div>
-            </div>
-
-            <div class="detail-card">
-              <div class="detail-header">
-                <span class="detail-icon">💨</span>
-                <span class="detail-title-text">Wind</span>
-              </div>
-              <div class="detail-value-large">{{ getCurrentWindSpeed() }}</div>
-              <div class="detail-description">{{ getCurrentWindDirection() }} Richtung</div>
-            </div>
-
-            <div class="detail-card">
-              <div class="detail-header">
-                <span class="detail-icon">☁️</span>
-                <span class="detail-title-text">Bewölkung</span>
-              </div>
-              <div class="detail-value-large">{{ getCurrentCloudCover() }}</div>
-              <div class="detail-description">Wolkenbedeckung</div>
-            </div>
-
-            <div class="detail-card">
-              <div class="detail-header">
-                <span class="detail-icon">🏭</span>
-                <span class="detail-title-text">Luftqualität</span>
-              </div>
-              <div class="detail-value-large">{{ getCurrentAirQuality() }}</div>
-              <div class="detail-description">US AQI Index</div>
+              <div class="detail-value-large">{{ container.value }}</div>
+              <div class="detail-description">{{ container.description }}</div>
             </div>
           </div>
         </div>
@@ -171,6 +103,25 @@
         <div class="chart-container">
           <canvas ref="precipitationChart"></canvas>
         </div>
+
+        <!-- Weather Details Section -->
+        <div class="weather-details">
+          <h3 class="details-title">{{ getActiveTabTitle() }}</h3>
+          <div class="details-grid">
+            <div
+              v-for="container in getActiveTabContainers()"
+              :key="container.key"
+              class="detail-card"
+            >
+              <div class="detail-header">
+                <span class="detail-icon">{{ container.icon }}</span>
+                <span class="detail-title-text">{{ container.title }}</span>
+              </div>
+              <div class="detail-value-large">{{ container.value }}</div>
+              <div class="detail-description">{{ container.description }}</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Wind Tab -->
@@ -178,12 +129,128 @@
         <div class="chart-container">
           <canvas ref="windChart"></canvas>
         </div>
+
+        <!-- Weather Details Section -->
+        <div class="weather-details">
+          <h3 class="details-title">{{ getActiveTabTitle() }}</h3>
+          <div class="details-grid">
+            <div
+              v-for="container in getActiveTabContainers()"
+              :key="container.key"
+              class="detail-card"
+            >
+              <div class="detail-header">
+                <span class="detail-icon">{{ container.icon }}</span>
+                <span class="detail-title-text">{{ container.title }}</span>
+              </div>
+              <div class="detail-value-large">{{ container.value }}</div>
+              <div class="detail-description">{{ container.description }}</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Luftqualität Tab -->
       <div v-if="activeTab === 'airquality'" class="tab-panel">
         <div class="chart-container">
           <canvas ref="airQualityChart"></canvas>
+        </div>
+
+        <!-- Weather Details Section -->
+        <div class="weather-details">
+          <h3 class="details-title">{{ getActiveTabTitle() }}</h3>
+          <div class="details-grid">
+            <div
+              v-for="container in getActiveTabContainers()"
+              :key="container.key"
+              class="detail-card"
+            >
+              <div class="detail-header">
+                <span class="detail-icon">{{ container.icon }}</span>
+                <span class="detail-title-text">{{ container.title }}</span>
+              </div>
+              <div class="detail-value-large">{{ container.value }}</div>
+              <div class="detail-description">{{ container.description }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bewölkt Tab -->
+      <div v-if="activeTab === 'cloudcover'" class="tab-panel">
+        <div class="chart-container">
+          <canvas ref="cloudCoverChart"></canvas>
+        </div>
+
+        <!-- Weather Details Section -->
+        <div class="weather-details">
+          <h3 class="details-title">{{ getActiveTabTitle() }}</h3>
+          <div class="details-grid">
+            <div
+              v-for="container in getActiveTabContainers()"
+              :key="container.key"
+              class="detail-card"
+            >
+              <div class="detail-header">
+                <span class="detail-icon">{{ container.icon }}</span>
+                <span class="detail-title-text">{{ container.title }}</span>
+              </div>
+              <div class="detail-value-large">{{ container.value }}</div>
+              <div class="detail-description">{{ container.description }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sichtbarkeit Tab -->
+      <div v-if="activeTab === 'visibility'" class="tab-panel">
+        <div class="chart-container">
+          <canvas ref="visibilityChart"></canvas>
+        </div>
+
+        <!-- Weather Details Section -->
+        <div class="weather-details">
+          <h3 class="details-title">{{ getActiveTabTitle() }}</h3>
+          <div class="details-grid">
+            <div
+              v-for="container in getActiveTabContainers()"
+              :key="container.key"
+              class="detail-card"
+            >
+              <div class="detail-header">
+                <span class="detail-icon">{{ container.icon }}</span>
+                <span class="detail-title-text">{{ container.title }}</span>
+              </div>
+              <div class="detail-value-large">{{ container.value }}</div>
+              <div class="detail-description">{{ container.description }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sonnenstrahlung Tab -->
+      <div v-if="activeTab === 'solar'" class="tab-panel">
+        <div class="chart-container">
+          <canvas ref="solarRadiationChart"></canvas>
+        </div>
+
+        <!-- Weather Details Section -->
+        <div class="weather-details">
+          <h3 class="details-title">{{ getActiveTabTitle() }}</h3>
+          <div class="details-grid">
+            <div
+              v-for="container in getActiveTabContainers()"
+              :key="container.key"
+              class="detail-card"
+            >
+              <div class="detail-header">
+                <span class="detail-icon">{{ container.icon }}</span>
+                <span class="detail-title-text">{{ container.title }}</span>
+              </div>
+              <div class="detail-value-large">{{ container.value }}</div>
+              <div class="detail-description">{{ container.description }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -204,5 +271,5 @@
   </div>
 </template>
 
-<script src="./HourlyForecastScript.js"></script>
-<style src="./HourlyForecastCSS.css" scoped></style>
+<script src="./HourlyForecast.js"></script>
+<style src="./HourlyForecast.css" scoped></style>

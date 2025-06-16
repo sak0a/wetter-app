@@ -1,5 +1,6 @@
 .weather-card {
     padding: 1.5rem;
+    height: 100%;
     opacity: 0;
     transform: translateY(10px);
     transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
