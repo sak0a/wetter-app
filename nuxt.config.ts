@@ -39,5 +39,14 @@ export default defineNuxtConfig({
       ]
     }
   },
-  modules: ['@nuxtjs/tailwindcss', 'nuxt-mdi']
+  modules: ['@nuxtjs/tailwindcss', 'nuxt-mdi'],
+
+  // Test configuration
+  nitro: {
+    esbuild: {
+      options: {
+        target: 'esnext'
+      }
+    }
+  }
 })
