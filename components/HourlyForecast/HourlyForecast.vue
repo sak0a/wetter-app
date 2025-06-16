@@ -271,5 +271,5 @@
   </div>
 </template>
 
-<script src="./HourlyForecast.js"></script>
+<script src="./HourlyForecast.script.js"></script>
 <style src="./HourlyForecast.css" scoped></style>

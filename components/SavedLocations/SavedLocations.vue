@@ -77,5 +77,5 @@
   </div>
 </template>
 
-<script src="./SavedLocations.js"></script>
+<script src="./SavedLocations.script.js"></script>
 <style src="./SavedLocations.css" scoped></style>
