@@ -1,9 +1,0 @@
-1. 7 Tage Ansicht
-2. Ausschlüsselung nach Wetterdaten
-3. Buttons von Map entfernen
-4. Scroll Problem mit den gespeicherten Orten lösen
-5. Irgendwelche Tests durchführen
-
--------------------------------------------------
-
-
