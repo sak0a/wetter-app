@@ -1709,66 +1709,133 @@ export default {
 
         const getCurrentShortwaveRadiation = () => {
             const data = selectedDayHourlyData.value;
-            console.log('☀️ Shortwave Radiation Debug:', data?.shortwave_radiation?.[0]);
 
             if (!data?.shortwave_radiation || !Array.isArray(data.shortwave_radiation) || data.shortwave_radiation.length === 0) {
                 console.log('❌ Shortwave radiation: no array or empty array');
                 return 'N/A';
             }
-            if (data.shortwave_radiation[0] === undefined || data.shortwave_radiation[0] === null) {
+
+            // Find current hour index or use peak value during day
+            const now = new Date();
+            const currentHour = now.getHours();
+            let valueIndex = 0;
+
+            // If we have enough data points and it's the current day, use current hour
+            if (data.shortwave_radiation.length > currentHour && selectedDayIndex.value === 1) {
+                valueIndex = currentHour;
+            } else {
+                // Otherwise, find the maximum value (peak solar radiation) for the day
+                const maxIndex = data.shortwave_radiation.indexOf(Math.max(...data.shortwave_radiation));
+                valueIndex = maxIndex >= 0 ? maxIndex : 0;
+            }
+
+            const value = data.shortwave_radiation[valueIndex];
+            if (value === undefined || value === null) {
                 console.log('❌ Shortwave radiation: value is undefined or null');
                 return 'N/A';
             }
-            console.log('✅ Shortwave radiation returning value:', Math.round(data.shortwave_radiation[0]));
-            return `${Math.round(data.shortwave_radiation[0])} W/m²`;
+
+            const roundedValue = Math.round(value);
+            console.log('✅ Shortwave radiation returning value:', roundedValue, 'at index:', valueIndex);
+            return `${roundedValue} W/m²`;
         };
 
         const getCurrentDirectRadiation = () => {
             const data = selectedDayHourlyData.value;
-            console.log('🌞 Direct Radiation Debug:', data?.direct_radiation?.[0]);
 
             if (!data?.direct_radiation || !Array.isArray(data.direct_radiation) || data.direct_radiation.length === 0) {
                 console.log('❌ Direct radiation: no array or empty array');
                 return 'N/A';
             }
-            if (data.direct_radiation[0] === undefined || data.direct_radiation[0] === null) {
+
+            // Find current hour index or use peak value during day
+            const now = new Date();
+            const currentHour = now.getHours();
+            let valueIndex = 0;
+
+            // If we have enough data points and it's the current day, use current hour
+            if (data.direct_radiation.length > currentHour && selectedDayIndex.value === 1) {
+                valueIndex = currentHour;
+            } else {
+                // Otherwise, find the maximum value (peak solar radiation) for the day
+                const maxIndex = data.direct_radiation.indexOf(Math.max(...data.direct_radiation));
+                valueIndex = maxIndex >= 0 ? maxIndex : 0;
+            }
+
+            const value = data.direct_radiation[valueIndex];
+            if (value === undefined || value === null) {
                 console.log('❌ Direct radiation: value is undefined or null');
                 return 'N/A';
             }
-            console.log('✅ Direct radiation returning value:', Math.round(data.direct_radiation[0]));
-            return `${Math.round(data.direct_radiation[0])} W/m²`;
+
+            const roundedValue = Math.round(value);
+            console.log('✅ Direct radiation returning value:', roundedValue, 'at index:', valueIndex);
+            return `${roundedValue} W/m²`;
         };
 
         const getCurrentDiffuseRadiation = () => {
             const data = selectedDayHourlyData.value;
-            console.log('🌤️ Diffuse Radiation Debug:', data?.diffuse_radiation?.[0]);
 
             if (!data?.diffuse_radiation || !Array.isArray(data.diffuse_radiation) || data.diffuse_radiation.length === 0) {
                 console.log('❌ Diffuse radiation: no array or empty array');
                 return 'N/A';
             }
-            if (data.diffuse_radiation[0] === undefined || data.diffuse_radiation[0] === null) {
+
+            // Find current hour index or use peak value during day
+            const now = new Date();
+            const currentHour = now.getHours();
+            let valueIndex = 0;
+
+            // If we have enough data points and it's the current day, use current hour
+            if (data.diffuse_radiation.length > currentHour && selectedDayIndex.value === 1) {
+                valueIndex = currentHour;
+            } else {
+                // Otherwise, find the maximum value (peak solar radiation) for the day
+                const maxIndex = data.diffuse_radiation.indexOf(Math.max(...data.diffuse_radiation));
+                valueIndex = maxIndex >= 0 ? maxIndex : 0;
+            }
+
+            const value = data.diffuse_radiation[valueIndex];
+            if (value === undefined || value === null) {
                 console.log('❌ Diffuse radiation: value is undefined or null');
                 return 'N/A';
             }
-            console.log('✅ Diffuse radiation returning value:', Math.round(data.diffuse_radiation[0]));
-            return `${Math.round(data.diffuse_radiation[0])} W/m²`;
+
+            const roundedValue = Math.round(value);
+            console.log('✅ Diffuse radiation returning value:', roundedValue, 'at index:', valueIndex);
+            return `${roundedValue} W/m²`;
         };
 
         const getCurrentSunshineDuration = () => {
             const data = selectedDayHourlyData.value;
-            console.log('⏱️ Sunshine Duration Debug:', data?.sunshine_duration?.[0]);
 
             if (!data?.sunshine_duration || !Array.isArray(data.sunshine_duration) || data.sunshine_duration.length === 0) {
                 console.log('❌ Sunshine duration: no array or empty array');
                 return 'N/A';
             }
-            if (data.sunshine_duration[0] === undefined || data.sunshine_duration[0] === null) {
+
+            // For sunshine duration, sum up the total for the day or use current hour
+            const now = new Date();
+            const currentHour = now.getHours();
+            let valueInSeconds = 0;
+
+            // If we have enough data points and it's the current day, use current hour
+            if (data.sunshine_duration.length > currentHour && selectedDayIndex.value === 1) {
+                valueInSeconds = data.sunshine_duration[currentHour] || 0;
+            } else {
+                // Otherwise, find the maximum value for the day
+                valueInSeconds = Math.max(...data.sunshine_duration.filter(v => v !== null && v !== undefined)) || 0;
+            }
+
+            if (valueInSeconds === undefined || valueInSeconds === null) {
                 console.log('❌ Sunshine duration: value is undefined or null');
                 return 'N/A';
             }
-            console.log('✅ Sunshine duration returning value:', Math.round(data.sunshine_duration[0]));
-            return `${Math.round(data.sunshine_duration[0])} min`;
+
+            // Convert seconds to minutes
+            const valueInMinutes = Math.round(valueInSeconds / 60);
+            console.log('✅ Sunshine duration returning value:', valueInMinutes, 'min (from', valueInSeconds, 'seconds)');
+            return `${valueInMinutes} min`;
         };
 
         // Initialize charts on mount
