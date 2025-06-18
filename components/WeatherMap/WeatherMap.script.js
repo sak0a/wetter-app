@@ -278,8 +278,8 @@ export default {
                 return;
             }
 
-            // Show overlay ONLY when zoomed out (zoom level 8 or LESS) and ONLY in fullscreen mode
-            showWeatherOverlay.value = isFullscreen.value && currentZoom.value <= 8;
+            // Show overlay always when in fullscreen mode (big map), never in small map
+            showWeatherOverlay.value = isFullscreen.value;
         };
 
         // Weather data formatting functions

@@ -30,7 +30,7 @@
         <div class="overlay-metrics">
           <div class="overlay-metric">
             <span class="metric-label">Luftdruck</span>
-            <span class="metric-value">{{ weatherData.current?.pressure || 'N/A' }} hPa</span>
+            <span class="metric-value">{{ weatherData.current?.pressure ? weatherData.current.pressure.toFixed(2) : 'N/A' }} hPa</span>
           </div>
           <div class="overlay-metric">
             <span class="metric-label">Wind</span>
