@@ -1323,19 +1323,4 @@ window.addEventListener('error', (event) => {
 4. **Web Content Accessibility Guidelines (WCAG) 2.1** - https://www.w3.org/WAI/WCAG21/
 5. **Progressive Web Apps (PWA) Guide** - https://web.dev/progressive-web-apps/
 
-### A.3 Projektstatistiken
 
-**Code-Metriken (Stand: Dezember 2024):**
-- **Zeilen Code**: ~2,500 LOC
-- **Komponenten**: 8 Vue-Komponenten
-- **Utility-Funktionen**: 25+ Hilfsfunktionen
-- **Test Coverage**: 85%
-- **Bundle-Größe**: 245KB (gzipped)
-- **Lighthouse-Score**: 92/100 (Performance)
-
-**Entwicklungszeit:**
-- **Planung und Design**: 2 Wochen
-- **Implementierung**: 6 Wochen
-- **Testing und Debugging**: 2 Wochen
-- **Dokumentation**: 1 Woche
-- **Gesamt**: 11 Wochen
