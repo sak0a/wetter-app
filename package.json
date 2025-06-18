@@ -10,7 +10,11 @@
     "postinstall": "nuxt prepare",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "deploy:netlify": "./deploy-netlify.sh",
+    "deploy:netlify:prod": "./deploy-netlify.sh prod",
+    "deploy:github": "npm run generate && gh-pages -d .output/public",
+    "check:deployment": "node check-deployment.js"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.13.1",
@@ -31,6 +35,7 @@
     "@types/leaflet": "^1.9.16",
     "@vitest/ui": "^3.2.3",
     "@vue/test-utils": "^2.4.6",
+    "gh-pages": "^6.3.0",
     "happy-dom": "^17.6.3",
     "jsdom": "^26.1.0",
     "sass": "^1.85.1",
