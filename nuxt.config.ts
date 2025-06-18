@@ -10,7 +10,6 @@ export default defineNuxtConfig({
     }
   },
 
-
   css: ['~/assets/css/tailwind.sass', 'leaflet/dist/leaflet.css', '~/assets/css/main.css'],
   tailwindcss: {
     cssPath: ['~/assets/css/tailwind.sass', { injectPosition: "first" }],
@@ -51,6 +50,4 @@ export default defineNuxtConfig({
     }
   },
   modules: ['@nuxtjs/tailwindcss', 'nuxt-mdi'],
-
-  // Test configuration - merged with prerender config above
 })
