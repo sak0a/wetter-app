@@ -110,7 +110,7 @@
               <path d="M12 8h.01"></path>
             </svg>
           </div>
-          <div class="metric-value">{{ weatherData.current.pressure }} mbar</div>
+          <div class="metric-value">{{ weatherData.current.pressure ? weatherData.current.pressure.toFixed(2) : 'N/A' }} mbar</div>
         </div>
 
         <div class="metric-item">
