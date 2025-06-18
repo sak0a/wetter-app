@@ -1,4 +1,4 @@
-# Wetter-App - IHK Projektdokumentation
+# Wetter-App
 
 **Projektteam:** Tom Kayser, Dzhan Mestan, Laurin Frank, Luke Novitzki
 
