@@ -3,6 +3,9 @@
     background: transparent !important;
     border: none !important;
     z-index: 1000 !important;
+    width: 30px !important;
+    height: 42px !important;
+    position: relative !important;
 }
 
 .marker-pin {
@@ -15,16 +18,19 @@
     left: 50%;
     top: 50%;
     margin: -15px 0 0 -10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    z-index: 1001;
+    box-shadow:
+        0 0 10px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(79, 109, 245, 0.4);
+    z-index: 1001 !important;
+    border: 2px solid rgba(255, 255, 255, 0.9);
 }
 
 .marker-pin::after {
     content: '';
-    width: 12px;
-    height: 12px;
+    width: 8px;
+    height: 8px;
     margin: 4px 0 0 4px;
-    background: #2b3074;
+    background: #ffffff;
     position: absolute;
     border-radius: 50%;
 }
@@ -40,11 +46,12 @@
     height: 40px;
     border-radius: 50%;
     background: rgba(79, 109, 245, 0.2);
+    border: 2px solid rgba(79, 109, 245, 0.5);
     position: absolute;
     left: 5px;
     top: 5px;
     animation: pulse-map 2s infinite;
-    z-index: 999;
+    z-index: 999 !important;
 }
 
 @keyframes pulse-map {
@@ -57,6 +64,8 @@
         opacity: 0;
     }
 }
+
+
 
 /* Map Container Styles */
 .map-container {

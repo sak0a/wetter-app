@@ -10,6 +10,10 @@ export default {
         useImperialUnits: {
             type: Boolean,
             default: false
+        },
+        currentLocationId: {
+            type: [String, Number],
+            default: null
         }
     },
     emits: ['select', 'remove', 'refresh-location'],

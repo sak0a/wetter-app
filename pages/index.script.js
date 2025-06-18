@@ -36,6 +36,19 @@ export default {
         const currentCoords = ref({ lat: 50.110644, lng: 8.68 }); // Default to Frankfurt
         const useImperialUnits = ref(false);
 
+        // Computed property to get currently selected location ID
+        const currentLocationId = computed(() => {
+            if (!weatherData.value) return null;
+
+            // Check if current weather matches any saved location
+            const matchingLocation = searchHistory.value.find(item =>
+                Math.abs(item.coords.lat - weatherData.value.coords.lat) < 0.05 &&
+                Math.abs(item.coords.lng - weatherData.value.coords.lng) < 0.05
+            );
+
+            return matchingLocation ? matchingLocation.id : null;
+        });
+
         onMounted(() => {
             loadSearchHistoryFromStorage();
             if (typeof window !== 'undefined') {
@@ -50,6 +63,9 @@ export default {
                 // Check for first visit and request location (only if no last viewed weather)
                 if (!weatherData.value) {
                     checkFirstVisitAndRequestLocation();
+                } else {
+                    // If we have weather data, still try to update current location if permission exists
+                    updateCurrentLocationIfPermissionExists();
                 }
             }
         });
@@ -194,17 +210,28 @@ export default {
         const saveCurrentWeather = () => {
             if (!weatherData.value) return;
 
+            // Don't save if it's a current location (GPS/IP-based)
+            const isCurrentLocationEntry = searchHistory.value.some(item =>
+                item.isCurrentLocation &&
+                Math.abs(item.coords.lat - weatherData.value.coords.lat) < 0.05 &&
+                Math.abs(item.coords.lng - weatherData.value.coords.lng) < 0.05
+            );
+
+            if (isCurrentLocationEntry) return;
+
             const existingIndex = searchHistory.value.findIndex(item =>
-                item.name === weatherData.value.name ||
-                (Math.abs(item.coords.lat - weatherData.value.coords.lat) < 0.05 &&
-                    Math.abs(item.coords.lng - weatherData.value.coords.lng) < 0.05)
+                !item.isCurrentLocation && (
+                    item.name === weatherData.value.name ||
+                    (Math.abs(item.coords.lat - weatherData.value.coords.lat) < 0.05 &&
+                        Math.abs(item.coords.lng - weatherData.value.coords.lng) < 0.05)
+                )
             );
 
             if (existingIndex !== -1) {
                 searchHistory.value.splice(existingIndex, 1);
             }
 
-            searchHistory.value.unshift({
+            searchHistory.value.push({
                 id: weatherData.value.id,
                 name: weatherData.value.name,
                 fullName: weatherData.value.fullName,
@@ -212,10 +239,16 @@ export default {
                 current: weatherData.value.current
             });
 
-            if (searchHistory.value.length > 5) {
-                searchHistory.value = searchHistory.value.slice(0, 5);
+            // Keep current location at the beginning, then sort others
+            const currentLocationItems = searchHistory.value.filter(item => item.isCurrentLocation);
+            const regularItems = searchHistory.value.filter(item => !item.isCurrentLocation);
+
+            // Limit regular items to 3 (plus 1 current location = 4 total max)
+            if (regularItems.length > 3) {
+                regularItems.splice(3);
             }
 
+            searchHistory.value = [...currentLocationItems, ...regularItems];
             saveSearchHistoryToStorage();
         };
 
@@ -230,6 +263,13 @@ export default {
 
         const removeHistoryItem = (id, event) => {
             if (event) event.stopPropagation();
+
+            // Don't allow removal of permanent current location
+            const itemToRemove = searchHistory.value.find(item => item.id === id);
+            if (itemToRemove && itemToRemove.isCurrentLocation && itemToRemove.isPermanent) {
+                return;
+            }
+
             searchHistory.value = searchHistory.value.filter(item => item.id !== id);
             saveSearchHistoryToStorage();
         };
@@ -238,6 +278,42 @@ export default {
         const checkFirstVisitAndRequestLocation = async () => {
             if (isFirstVisit()) {
                 await requestLocationPermission();
+            }
+        };
+
+        const updateCurrentLocationIfPermissionExists = async () => {
+            try {
+                // Check if geolocation permission is already granted
+                if (navigator.permissions) {
+                    const permission = await navigator.permissions.query({ name: 'geolocation' });
+                    if (permission.state === 'granted') {
+                        // Silently update current location
+                        navigator.geolocation.getCurrentPosition(
+                            async (position) => {
+                                const coords = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude
+                                };
+
+                                try {
+                                    const cityInfo = await getCityName(coords.lat, coords.lng);
+                                    if (cityInfo) {
+                                        // Update current location in history
+                                        saveCurrentLocationToHistoryLocal(coords, cityInfo, false);
+                                    }
+                                } catch (error) {
+                                    console.log('Could not update current location:', error);
+                                }
+                            },
+                            (error) => {
+                                console.log('Could not get current position:', error);
+                            },
+                            { timeout: 10000, maximumAge: 300000 } // 5 minute cache
+                        );
+                    }
+                }
+            } catch (error) {
+                console.log('Could not check geolocation permission:', error);
             }
         };
 
@@ -276,11 +352,11 @@ export default {
         };
 
         const saveCurrentLocationToHistoryLocal = (coords, cityInfo, isIPBased = false) => {
-            const locationName = isIPBased ? 'Current Location (Approximate)' : 'Current Location';
+            const locationName = isIPBased ? 'Dein Standort (Ungefähr)' : 'Dein Standort';
 
             // Remove any existing current location entries
             searchHistory.value = searchHistory.value.filter(item =>
-                !item.name.includes('Current Location')
+                !item.isCurrentLocation
             );
 
             if (weatherData.value) {
@@ -291,15 +367,16 @@ export default {
                     coords: coords,
                     current: weatherData.value.current,
                     isCurrentLocation: true,
-                    isIPBased: isIPBased
+                    isIPBased: isIPBased,
+                    isPermanent: !isIPBased // GPS-based locations are permanent
                 };
 
                 // Add current location as first item
                 searchHistory.value.unshift(currentLocationEntry);
 
-                // Keep only 6 items total (including current location)
-                if (searchHistory.value.length > 6) {
-                    searchHistory.value = searchHistory.value.slice(0, 6);
+                // Keep only 4 items total (including current location)
+                if (searchHistory.value.length > 4) {
+                    searchHistory.value = searchHistory.value.slice(0, 4);
                 }
 
                 saveSearchHistoryToStorage();
@@ -314,6 +391,7 @@ export default {
             searchHistory,
             currentCoords,
             useImperialUnits,
+            currentLocationId,
             toggleUnits,
             formatTempC,
             formatTempF,

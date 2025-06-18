@@ -35,6 +35,27 @@
     position: relative;
 }
 
+/* Active location styling (same as daily cards selected state) */
+.saved-location-item.active {
+    background: rgba(79, 109, 245, 0.35) !important;
+    border-color: rgba(79, 109, 245, 0.7) !important;
+    box-shadow:
+        0 0 0 2px rgba(79, 109, 245, 0.4),
+        0 4px 16px rgba(79, 109, 245, 0.2) !important;
+    transform: translateY(-2px);
+    z-index: 10;
+}
+
+/* When current location is also active */
+.saved-location-item.current-location.active {
+    background: rgba(79, 109, 245, 0.4) !important;
+    border-color: rgba(79, 109, 245, 0.8) !important;
+    box-shadow:
+        0 0 0 2px rgba(79, 109, 245, 0.5),
+        0 6px 20px rgba(79, 109, 245, 0.3) !important;
+    transform: translateY(-3px);
+}
+
 .saved-location-item.current-location:hover {
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
 }

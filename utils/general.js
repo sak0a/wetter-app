@@ -251,29 +251,32 @@ export function loadSearchHistory() {
  * @param {boolean} isIPBased - Whether location is IP-based
  */
 export function saveCurrentLocationToHistory(coords, cityInfo, isIPBased = false) {
+    const locationName = isIPBased ? 'Dein Standort (Ungefähr)' : 'Dein Standort';
+
     const locationData = {
-        id: Date.now(),
-        name: cityInfo.cityName,
+        id: 'current-location',
+        name: locationName,
         fullName: cityInfo.fullName,
         coords,
         isCurrentLocation: true,
         isIPBased,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        isPermanent: !isIPBased // GPS-based locations are permanent, IP-based are not
     };
-    
+
     const history = loadSearchHistory();
-    
+
     // Remove any existing current location entries
     const filteredHistory = history.filter(item => !item.isCurrentLocation);
-    
+
     // Add new current location at the beginning
     filteredHistory.unshift(locationData);
-    
-    // Keep only the last 5 entries
-    if (filteredHistory.length > 5) {
-        filteredHistory.splice(5);
+
+    // Keep only the last 4 entries (including current location, so max 4 total)
+    if (filteredHistory.length > 4) {
+        filteredHistory.splice(4);
     }
-    
+
     saveSearchHistory(filteredHistory);
 }
 

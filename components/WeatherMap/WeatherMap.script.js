@@ -42,13 +42,6 @@ export default {
                 active: false,
                 url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
                 attribution: '&copy; <a href="https://www.esri.com/">Esri</a>'
-            },
-            {
-                name: 'Terrain',
-                layer: null,
-                active: false,
-                url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-                attribution: '&copy; <a href="https://www.opentopomap.org/">OpenTopoMap</a>'
             }
         ]);
 
@@ -71,39 +64,93 @@ export default {
                 pulseMarker.value = null;
             }
 
-            // Create main marker with custom icon (exactly like old version)
+            // Ensure coordinates are valid
+            if (!coords || typeof coords.lat !== 'number' || typeof coords.lng !== 'number') {
+                console.warn('Invalid coordinates provided:', coords);
+                coords = { lat: 50.110644, lng: 8.68 }; // Fallback to Frankfurt
+            }
+
+
+
+            // Create main marker with custom icon - inline styles for guaranteed visibility
             const customIcon = L.divIcon({
                 className: 'custom-div-icon',
-                html: `<div class="marker-pin"></div>`,
+                html: `<div style="
+                    width: 20px;
+                    height: 20px;
+                    background: #4f6df5;
+                    border: 2px solid white;
+                    border-radius: 50% 50% 50% 0;
+                    transform: rotate(-45deg);
+                    box-shadow: 0 0 10px rgba(0,0,0,0.3), 0 0 20px rgba(79,109,245,0.4);
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    margin: -15px 0 0 -10px;
+                    z-index: 1001;
+                ">
+                    <div style="
+                        width: 8px;
+                        height: 8px;
+                        background: white;
+                        border-radius: 50%;
+                        position: absolute;
+                        top: 4px;
+                        left: 4px;
+                    "></div>
+                </div>`,
                 iconSize: [30, 42],
                 iconAnchor: [15, 42]
             });
 
             marker.value = L.marker([coords.lat, coords.lng], {
-                icon: customIcon
+                icon: customIcon,
+                zIndexOffset: 1000
             }).addTo(mapObject.value);
 
-            // Add pulse animation around marker (exactly like old version)
+            // Add pulse animation around marker with inline styles and CSS animation
             const pulseIcon = L.divIcon({
                 className: 'pulse-icon',
-                html: `<div class="pulse-circle"></div>`,
+                html: `<div style="
+                    width: 40px;
+                    height: 40px;
+                    background: rgba(79, 109, 245, 0.2);
+                    border: 2px solid rgba(79, 109, 245, 0.5);
+                    border-radius: 50%;
+                    position: absolute;
+                    left: 5px;
+                    top: 5px;
+                    z-index: 999;
+                    animation: pulse-map 2s infinite;
+                "></div>`,
                 iconSize: [50, 50],
                 iconAnchor: [25, 25]
             });
 
             pulseMarker.value = L.marker([coords.lat, coords.lng], {
-                icon: pulseIcon
+                icon: pulseIcon,
+                zIndexOffset: 999
             }).addTo(mapObject.value);
 
-            console.log('Markers created successfully - main marker:', marker.value, 'pulse marker:', pulseMarker.value);
+
+
+            console.log('Markers created successfully');
+
+            // Force map to refresh
+            setTimeout(() => {
+                if (mapObject.value) {
+                    mapObject.value.invalidateSize();
+                }
+            }, 100);
         };
 
         // Initialize Leaflet map
         const initMap = () => {
-            console.log('Initializing map...');
+            // Ensure we have valid coordinates
+            const coords = props.currentCoords || { lat: 50.110644, lng: 8.68 };
 
             // Create map instance
-            mapObject.value = L.map('map').setView([props.currentCoords.lat, props.currentCoords.lng], 10);
+            mapObject.value = L.map('map').setView([coords.lat, coords.lng], 10);
 
             // Initialize layers
             initLayers();
@@ -114,8 +161,8 @@ export default {
                 defaultLayer.layer.addTo(mapObject.value);
             }
 
-            // Create initial markers (simplified like old version)
-            createMarkers(props.currentCoords);
+            // Create initial markers
+            createMarkers(coords);
 
             // Add click event to map for location selection
             mapObject.value.on('click', (e) => {
@@ -147,14 +194,11 @@ export default {
             });
         };
 
-        // Update marker position (simplified to match old working version)
+        // Update marker position
         const updateMarkerPosition = (coords) => {
             if (!mapObject.value || !marker.value || !L) {
-                console.warn('Cannot update marker position: Map, marker, or Leaflet not initialized');
                 return;
             }
-
-            console.log('Updating marker position to:', coords);
 
             // Move main marker
             marker.value.setLatLng([coords.lat, coords.lng]);
@@ -354,16 +398,22 @@ export default {
             // Import Leaflet dynamically (for SSR compatibility)
             import('leaflet').then((leaflet) => {
                 L = leaflet.default;
-                console.log('Leaflet loaded successfully');
                 initMap();
+
+                // Ensure marker is visible after a short delay
+                setTimeout(() => {
+                    if (mapObject.value) {
+                        const coords = props.currentCoords || { lat: 50.110644, lng: 8.68 };
+                        createMarkers(coords);
+                    }
+                }, 500);
             }).catch((error) => {
                 console.error('Error loading Leaflet:', error);
             });
         });
 
         // Watch for coordinate changes from parent
-        watch(() => props.currentCoords, (newCoords, oldCoords) => {
-            console.log('Coordinates changed from', oldCoords, 'to', newCoords);
+        watch(() => props.currentCoords, (newCoords) => {
             if (newCoords && mapObject.value) {
                 updateMarkerPosition(newCoords);
             }
