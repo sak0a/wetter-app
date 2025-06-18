@@ -72,7 +72,7 @@ export default {
 
 
 
-            // Create main marker with custom icon - inline styles for guaranteed visibility
+            // Create main marker with custom icon - centered and taller
             const customIcon = L.divIcon({
                 className: 'custom-div-icon',
                 html: `<div style="
@@ -99,8 +99,8 @@ export default {
                         left: 4px;
                     "></div>
                 </div>`,
-                iconSize: [30, 42],
-                iconAnchor: [15, 42]
+                iconSize: [50, 50],
+                iconAnchor: [25, 25]
             });
 
             marker.value = L.marker([coords.lat, coords.lng], {
