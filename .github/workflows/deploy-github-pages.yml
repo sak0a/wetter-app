@@ -19,21 +19,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: '20'
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       # Skip tests for now due to Chart.js test environment issues
       # - name: Run tests
       #   run: npm run test
 
       - name: Build application
-        run: npm run generate
+        run: bun run generate
         env:
           NODE_ENV: production
 
