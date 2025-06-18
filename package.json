@@ -11,8 +11,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "deploy:netlify": "./deploy-netlify.sh",
-    "deploy:netlify:prod": "./deploy-netlify.sh prod",
+    "deploy:netlify": "netlify deploy --dir=.output/public",
+    "deploy:netlify:prod": "netlify deploy --prod --dir=.output/public",
     "deploy:github": "bun run generate && gh-pages -d .output/public",
     "check:deployment": "node check-deployment.js"
   },
